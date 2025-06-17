@@ -82,10 +82,20 @@ on:
       kernel_sign:
         description: "Set the kernel custom signature"
         required: false
-        default: ""
+        default: "-ophub"
         type: choice
         options:
-          - 
+          - -ophub
+          - -happy-new-year
+          - -dragon-boat-festival
+          - -mid-autumn-festival
+          - -happy-national-day
+          - -merry-christmas
+          - -spring-plowing
+          - -summer-growing
+          - -autumn-harvesting
+          - -winter-storing
+          - -yourname
       kernel_config:
         description: "Set the path of kernel .config"
         required: false
@@ -96,7 +106,7 @@ on:
           - false
 
 env:
-  TZ: Asia/Makassar
+  TZ: America/New_York
 
 jobs:
   build:
@@ -167,8 +177,8 @@ jobs:
         run: |
           # Create a docker mapping directory
           mkdir -p /builder/compile-kernel/{kernel,output}
-          ln -sf /builder/compile-kernel/kernel /home/runner/work/_actions/predators46/amlogic-s9xxx-armbian/main/compile-kernel/kernel
-          ln -sf /builder/compile-kernel/output /home/runner/work/_actions/predators46/amlogic-s9xxx-armbian/main/compile-kernel/output
+          ln -sf /builder/compile-kernel/kernel /home/runner/work/_actions/ophub/amlogic-s9xxx-armbian/main/compile-kernel/kernel
+          ln -sf /builder/compile-kernel/output /home/runner/work/_actions/ophub/amlogic-s9xxx-armbian/main/compile-kernel/output
 
           # Pull the Armbian Docker image
           docker run -d --privileged \
@@ -180,7 +190,7 @@ jobs:
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Compile the kernel [ ${{ inputs.kernel_version }} ]
-        uses: predators46/amlogic-s9xxx-armbian@main
+        uses: ophub/amlogic-s9xxx-armbian@main
         if: ${{ steps.pull.outputs.status }} == 'success' && !cancelled()
         with:
           build_target: kernel
