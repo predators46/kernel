@@ -90,7 +90,7 @@ on:
           - 
 
 env:
-  TZ: Asia/Makassar
+  TZ: America/New_York
 
 jobs:
   build:
