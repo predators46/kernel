@@ -197,12 +197,12 @@ jobs:
 
           # Pull the Armbian Docker image
           docker run -d --privileged \
-              --name armbian-predators46 \
+              --name armbian-ophub \
               -v /builder/compile-kernel:/opt/kernel/compile-kernel \
               -v /etc/localtime:/etc/localtime:ro \
               -v /etc/timezone:/etc/timezone:ro \
               --restart=always \
-              predators46/armbian-${{ inputs.docker_image }}:latest
+              ophub/armbian-${{ inputs.docker_image }}:latest
 
           echo "status=success" >> ${GITHUB_OUTPUT}
 
