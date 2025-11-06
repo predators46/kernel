@@ -197,17 +197,17 @@ jobs:
 
           # Pull the Armbian Docker image
           docker run -d --privileged \
-              --name armbian-ophub \
+              --name armbian-predators46 \
               -v /builder/compile-kernel:/opt/kernel/compile-kernel \
               -v /etc/localtime:/etc/localtime:ro \
               -v /etc/timezone:/etc/timezone:ro \
               --restart=always \
-              ophub/armbian-${{ inputs.docker_image }}:latest
+              predators46/armbian-${{ inputs.docker_image }}:latest
 
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Compile the kernel [ ${{ inputs.kernel_version }} ]
-        uses: predators46/amlogic-s9xxx-armbian@main
+        uses: predators46/amlogic-s9xxx-armbian@wifi
         if: ${{ steps.pull.outputs.status }} == 'success' && !cancelled()
         with:
           build_target: kernel
@@ -220,7 +220,7 @@ jobs:
           kernel_patch: ${{ inputs.kernel_patch }}
           auto_patch: ${{ inputs.auto_patch }}
           compress_format: ${{ inputs.compress_format }}
-          kernel_sign: -beta
+          kernel_sign:
           delete_source: true
           silent_log: false
 
