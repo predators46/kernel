@@ -18,6 +18,7 @@ on:
         options:
           - unifreq
           - codesnas
+          - predators46
       kernel_version:
         description: "Select kernel version"
         required: false
