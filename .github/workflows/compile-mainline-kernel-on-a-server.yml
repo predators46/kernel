@@ -73,6 +73,24 @@ on:
           - bookworm
           - noble
           - jammy
+      kernel_sign:
+        description: "Set the kernel custom signature"
+        required: false
+        default: ""
+        type: choice
+        options:
+          - -ophub
+          - -happy-new-year
+          - -dragon-boat-festival
+          - -mid-autumn-festival
+          - -happy-national-day
+          - -merry-christmas
+          - -spring-plowing
+          - -summer-growing
+          - -autumn-harvesting
+          - -winter-storing
+          - -yourname
+          -  
       kernel_config:
         description: "Set the path of kernel .config"
         required: false
@@ -164,7 +182,7 @@ jobs:
             kernel-mainline-${{ inputs.kernel_toolchain }}-${{ inputs.kernel_version }}-
 
       - name: Compile the kernel [ ${{ inputs.kernel_version }} ]
-        uses: ophub/amlogic-s9xxx-armbian@main
+        uses: predators46/amlogic-s9xxx-armbian@main
         if: ${{ steps.disk.outputs.status }} == 'success' && !cancelled()
         with:
           build_target: kernel
@@ -174,7 +192,7 @@ jobs:
           delete_source: ${{ inputs.delete_source }}
           kernel_package: ${{ inputs.kernel_package }}
           kernel_toolchain: ${{ inputs.kernel_toolchain }}
-          kernel_sign: 
+          kernel_sign: ${{ inputs.kernel_sign }}
           kernel_config: ${{ inputs.kernel_config }}
           ccache_clear: ${{ inputs.ccache_clear }}
           docker_hostpath: /builder
