@@ -4,7 +4,7 @@
 # Copyright (C) 2021 https://github.com/ophub/kernel
 #==========================================================================
 
-name: Compile mainline stable kernel
+name: Compile mainline stable kernel 2
 
 on:
   repository_dispatch:
@@ -29,6 +29,7 @@ on:
           - 6.1.y
           - 6.6.y
           - 6.12.y
+          - 6.18.y
       kernel_auto:
         description: "Auto use the latest kernel"
         required: false
@@ -76,9 +77,21 @@ on:
       kernel_sign:
         description: "Set the kernel custom signature"
         required: false
-        default: ""
+        default: "-ophub"
         type: choice
         options:
+          - -ophub
+          - -happy-new-year
+          - -dragon-boat-festival
+          - -mid-autumn-festival
+          - -happy-national-day
+          - -merry-christmas
+          - -spring-plowing
+          - -summer-growing
+          - -autumn-harvesting
+          - -winter-storing
+          - -yourname
+          - --
       kernel_config:
         description: "Set the path of kernel .config"
         required: false
@@ -94,7 +107,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-24.04-arm
-    if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
+    if: ${{ github.event.repository.owner.id == github.event.sender.id }}
 
     steps:
       - name: Checkout
@@ -170,8 +183,8 @@ jobs:
             kernel-mainline-${{ inputs.kernel_toolchain }}-${{ inputs.kernel_version }}-
 
       - name: Compile the kernel [ ${{ inputs.kernel_version }} ]
-        uses: predators46/amlogic-s9xxx-armbian@main
-        if: ${{ steps.disk.outputs.status }} == 'success' && !cancelled()
+        uses: ophub/amlogic-s9xxx-armbian@main
+        if: ${{ steps.disk.outputs.status == 'success' && !cancelled() }}
         with:
           build_target: kernel
           kernel_source: ${{ inputs.kernel_source }}
@@ -188,7 +201,7 @@ jobs:
 
       - name: Upload Kernel to Release
         uses: ncipollo/release-action@main
-        if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
+        if: ${{ env.PACKAGED_STATUS == 'success' && !cancelled() }}
         with:
           tag: kernel_stable
           artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
@@ -198,7 +211,7 @@ jobs:
           makeLatest: true
           token: ${{ secrets.GITHUB_TOKEN }}
           body: |
-            - These are Mainline `stable` kernels that provide support for Armbian and OpenWrt.
+            - These are Mainline `stable` kernels that provide support for `Armbian`, `OpenWrt` and `FnNAS`.
             - It works with most `Amlogic`, `Rockchip`, and `Allwinner` devices. For specific details, please refer to the instructions on the homepage of each system's repository.
-            - 这些是主线稳定内核，为 Armbian 和 OpenWrt 提供支持。
+            - 这些是主线稳定内核，为 `Armbian`、`OpenWrt` 和 `FnNAS` 提供支持。
             - 适用于 `amlogic`，`rockchip`，`allwinner` 的大部分设备，具体可以参考各系统仓库首页的说明。
