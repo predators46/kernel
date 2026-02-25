@@ -29,6 +29,7 @@ on:
           - 6.1.y
           - 6.6.y
           - 6.12.y
+          - 6.18.y
       kernel_auto:
         description: "Auto use the latest kernel"
         required: false
@@ -99,7 +100,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-24.04-arm
-    if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
+    if: ${{ github.event.repository.owner.id == github.event.sender.id }}
 
     steps:
       - name: Checkout
@@ -176,7 +177,7 @@ jobs:
 
       - name: Compile the kernel [ ${{ inputs.kernel_version }} ]
         uses: ophub/amlogic-s9xxx-armbian@main
-        if: ${{ steps.disk.outputs.status }} == 'success' && !cancelled()
+        if: ${{ steps.disk.outputs.status == 'success' && !cancelled() }}
         with:
           build_target: kernel
           kernel_source: ${{ inputs.kernel_source }}
@@ -195,7 +196,7 @@ jobs:
 
       - name: Upload Kernel to Release
         uses: ncipollo/release-action@main
-        if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
+        if: ${{ env.PACKAGED_STATUS == 'success' && !cancelled() }}
         with:
           tag: kernel_beta
           artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
@@ -205,5 +206,7 @@ jobs:
           makeLatest: true
           token: ${{ secrets.GITHUB_TOKEN }}
           body: |
-            - This is a beta kernel intended only for specific testing purposes. Do not use it unless you know what you are doing.
-            - 这是`测试版`内核，仅用于特定需求的测试，不知情勿用。
+            - These kernels can be used for `Armbian`, `OpenWrt` and `FnNAS`.
+            - These are mainline `beta` kernels that may contain experimental features. Do not use unless you know what you are doing.
+            - 这些内核可用于 `Armbian`, `OpenWrt` 和 `FnNAS`。
+            - 这些是主线 `测试版` 内核，可能包含实验性功能，不知情勿用。
